@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  influxdb:
+    image: influxdb:1.7-alpine
+    env_file: configuration.env
+    ports:
+      - '8086:8086'
+      - '2003:2003'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana:5.4.3
+    env_file: configuration.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./provisioning:/etc/grafana/provisioning:ro
+
+volumes:
+  grafana_data: {}
+  influxdb_data: {}
