@@ -2,7 +2,7 @@ version: '3'
 
 services:
   influxdb:
-    image: influxdb:1.7-alpine
+    build: ./influxdb
     env_file: configuration.env
     ports:
       - '8086:8086'
