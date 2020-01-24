@@ -1,23 +1,32 @@
 version: '3'
-
 services:
-  influxdb:
-    build: ./influxdb
+  gatling-influxdb:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gatling-influxdb:latest
     env_file: configuration.env
     ports:
       - '8086:8086'
       - '2003:2003'
     volumes:
       - influxdb_data:/var/lib/influxdb
-  grafana:
-    image: grafana/grafana:5.4.3
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/gatling-influxdb
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: gatling-influxdb
+  gatling-grafana:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/gatling-grafana:latest
     env_file: configuration.env
     ports:
       - '3000:3000'
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./provisioning:/etc/grafana/provisioning:ro
-
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: /ecs/gatling-grafana
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: gatling-grafana
 volumes:
-  grafana_data: {}
-  influxdb_data: {}
+  grafana_data:
+  influxdb_data:
